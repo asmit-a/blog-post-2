@@ -52,27 +52,27 @@ app = Flask(__name__)
 
 
 # slightly less trivial
-# def main():
-#     return render_template("main.html")
+def main():
+    return render_template("main.html")
 
 # A little fancier
 
 # @app.route("/")
-def main():
-    return render_template("please.html")
+# def main():
+#     return render_template("please.html")
 
-# getting basic user data
-@app.route('/ask/', methods=['POST', 'GET'])
-def ask():
-    if request.method == 'GET':
-        return render_template('ask.html')
-    else:
-        try:
-            return render_template('ask.html', name=request.form['name'], student=request.form['student'])
-        except:
-            return render_template('ask.html')
+# # getting basic user data
+# @app.route('/ask/', methods=['POST', 'GET'])
+# def ask():
+#     if request.method == 'GET':
+#         return render_template('ask.html')
+#     else:
+#         try:
+#             return render_template('ask.html', name=request.form['name'], student=request.form['student'])
+#         except:
+#             return render_template('ask.html')
 
-# 
-@app.route('/profile/<name>/')
-def hello_name(name):
-    return render_template('profile.html', name=name)
+# # 
+# @app.route('/profile/<name>/')
+# def hello_name(name):
+#     return render_template('profile.html', name=name)
