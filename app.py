@@ -50,10 +50,9 @@ def main():
     return render_template("base.html")
 
 
-@app.route('/submit/')
+@app.route('/submit/', methods=['POST', 'GET'])
 def submit():
-#     return render_template(submit.html)
-    return "yes"
+    return render_template("submit.html")
 
 @app.route('/view/')
 def view(): 
