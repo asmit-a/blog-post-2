@@ -6,6 +6,9 @@
 
 {% block content %}
 
-    <p>"{{message}}" from {{name}}</p>
+    {% for entry in row %}
+    <p>"{{entry[1]}}" from {{entry[0]}}</p>
+    {% endfor %}
+    
 
 {% endblock %}

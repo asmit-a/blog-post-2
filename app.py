@@ -109,11 +109,8 @@ def view():
         c = conn.cursor()
         c.execute("SELECT name, message FROM messages WHERE id = 1" )
         temp = c.fetchall()
-        message = temp[0][0]
-        name = temp[0][1]
         return render_template("view.html", 
-                                message = message, 
-                                name = name)
+                                row = temp)
     except conn.Error as err: 
         return "error!"
     finally:
