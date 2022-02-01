@@ -85,9 +85,10 @@ def submit():
         try:
             conn = sql.connect('message_db.db')
             c = conn.cursor()
-
+            c.execute("SELECT * FROM messages") # enter the table name
+            number_of_rows = 0 + len(c.fetchall())
             c.execute("INSERT INTO messages (id, message, name) VALUES (?, ?, ?)",
-                        (1, message, name))
+                        (number_of_rows + 1, message, name))
             conn.commit()
             return render_template("submit.html", 
                                     message = message, 
@@ -107,12 +108,16 @@ def view():
     try: 
         conn = sql.connect('message_db.db')
         c = conn.cursor()
-        c.execute("SELECT name, message FROM messages WHERE id = 1" )
+        n = 2
+        c.execute("SELECT * FROM messages") # enter the table name
+        number_of_rows = len(c.fetchall())
+        c.execute(f"SELECT * FROM messages ORDER BY RANDOM() LIMIT {n}")
         temp = c.fetchall()
         return render_template("view.html", 
-                                row = temp)
+                                row = temp,
+                                num = number_of_rows)
     except conn.Error as err: 
-        return "error!"
+        return "Error!"
     finally:
         conn.close()
 
