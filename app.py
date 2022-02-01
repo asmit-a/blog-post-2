@@ -42,8 +42,29 @@ https://pic16b-minimal-demo.herokuapp.com
 This set of lecture notes is based in part on previous materials developed by [Erin George](https://www.math.ucla.edu/~egeo/) (UCLA Mathematics) and the tutorial [here](https://stackabuse.com/deploying-a-flask-application-to-heroku/). 
 '''
 
-from flask import Flask, g, render_template, request 
+import sqlite3 as sql
+import click
+from flask import current_app, Flask, g, render_template, request 
+from flask.cli import with_appcontext
+
+# def get_db():
+#     if 'db' not in g:
+#         g.db = sqlite3.connect(current_app.config['DATABASE'],
+#                                 detect_types=sqlite3.PARSE_DECLTYPES)
+#         g.db.row_factory = sqlite3.Row
+#     return g.db
+
+# def close_db(e = None):
+#     db = g.pop('db', None)
+
+#     if db is not None:
+#         db.close()
+
 app = Flask(__name__)
+
+conn = sql.connect('message_db.db')
+conn.execute('CREATE TABLE IF NOT EXISTS messages (id INTEGER, message TEXT, name TEXT)')
+conn.close()
 
 @app.route("/")
 def main():
@@ -56,15 +77,49 @@ def submit():
 
         return render_template("submit.html")
     else:
-        return render_template("submit.html", 
-                                message = request.form["message"], 
-                                name = request.form["name"], 
-                                thanks = True)
+        # read data from form 
+        message = request.form["message"]
+        name = request.form["name"]
+
+        # store into database here
+        try:
+            conn = sql.connect('message_db.db')
+            c = conn.cursor()
+
+            c.execute("INSERT INTO messages (id, message, name) VALUES (?, ?, ?)",
+                        (1, message, name))
+            conn.commit()
+            return render_template("submit.html", 
+                                    message = message, 
+                                    name = name, 
+                                    thanks = True)
+        except conn.Error as err:
+            return "An error!"
+        finally:
+            conn.close()
+
+
+       
 
 
 @app.route('/view/')
 def view(): 
-    return "yes"
+    try: 
+        conn = sql.connect('message_db.db')
+        c = conn.cursor()
+        c.execute("SELECT name, message FROM messages WHERE id = 1" )
+        temp = c.fetchall()
+        message = temp[0][0]
+        name = temp[0][1]
+        return render_template("view.html", 
+                                message = message, 
+                                name = name)
+    except conn.Error as err: 
+        return "error!"
+    finally:
+        conn.close()
+
+
 
 
 
