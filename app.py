@@ -42,7 +42,7 @@ https://pic16b-minimal-demo.herokuapp.com
 This set of lecture notes is based in part on previous materials developed by [Erin George](https://www.math.ucla.edu/~egeo/) (UCLA Mathematics) and the tutorial [here](https://stackabuse.com/deploying-a-flask-application-to-heroku/). 
 '''
 
-from flask import Flask, render_template, request
+from flask import Flask, g, render_template, request 
 app = Flask(__name__)
 
 @app.route("/")
@@ -52,7 +52,15 @@ def main():
 
 @app.route('/submit/', methods=['POST', 'GET'])
 def submit():
-    return render_template("submit.html")
+    if request.method == 'GET':
+
+        return render_template("submit.html")
+    else:
+        return render_template("submit.html", 
+                                message = request.form["message"], 
+                                name = request.form["name"], 
+                                thanks = True)
+
 
 @app.route('/view/')
 def view(): 

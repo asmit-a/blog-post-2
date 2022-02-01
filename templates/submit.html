@@ -17,9 +17,9 @@
         <input type="submit" value="Submit message">
     </form>
 
-    <!-- {% if msg %}
-        {{msg}}
-    {% endif%} -->
+    {% if thanks %}
+        Thanks for submitting a message, {{name}}. Your message says: "{{message}}"
+    {% endif %}
 
 {% endblock %}
 
